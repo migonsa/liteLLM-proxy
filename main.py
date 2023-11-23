@@ -172,4 +172,4 @@ async def generate_key(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=getenv("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=getenv("PORT", 9091))
