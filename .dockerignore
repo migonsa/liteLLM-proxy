@@ -1,1 +1,11 @@
-.venv
+__pycache__
+tests
+.env
+**/.git
+**/.gitignore
+**/Dockerfile*
+**/dockerignore*
+LICENSE
+pyproject.toml
+poetry.lock
+README.md
