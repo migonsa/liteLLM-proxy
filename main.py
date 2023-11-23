@@ -13,7 +13,7 @@ import litellm
 from litellm import BudgetManager
 litellm.max_budget = 1000 
 
-budget_manager = BudgetManager(project_name=os.getenv("PROJECT_NAME"), client_type="hosted")
+budget_manager = BudgetManager(project_name=os.getenv("PROJECT_NAME"), client_type="local")
 
 from fastapi import FastAPI, Request, status, HTTPException, Depends
 from fastapi.responses import StreamingResponse
@@ -87,6 +87,34 @@ async def completion(request: Request):
 @app.get("/models/available")
 def get_available_models():
     return {"models": litellm.utils.get_valid_models()}
+
+
+@app.get("/models/availableIAs")
+def get_available_models2():
+    try:
+        environ_keys = os.environ.keys()
+        valid_providers = []
+        availableIAs = {}
+        for provider in litellm.provider_list:
+            provider = provider.replace("_", "")
+            expected_provider_key = f"{provider.upper()}_API_KEY"
+            if expected_provider_key in environ_keys:            
+                valid_providers.append(provider)
+        
+        for provider in valid_providers:
+            if provider == "azure":
+                availableIAs.update({provider: ["Azure-LLM"]})
+            else:
+                models_for_provider = litellm.models_by_provider.get(provider, [])
+                availableIAs.update({provider: models_for_provider})
+        return {"models": availableIAs}
+    except:
+        return [] # NON-Blocking
+
+
+@app.get("/models/supported")
+def get_supported_models():
+    return {"supported-mappings": litellm.models_by_provider}
 
 
 @app.get("/models") # if project requires model list 
