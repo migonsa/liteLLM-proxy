@@ -106,7 +106,7 @@ def get_available_models2():
                 availableIAs.update({provider: ["Azure-LLM"]})
             else:
                 models_for_provider = litellm.models_by_provider.get(provider, [])
-                availableIAs.update({provider: models_for_provider})
+                availableIAs.update({provider: sorted(models_for_provider)})
         return {"models": availableIAs}
     except:
         return [] # NON-Blocking
